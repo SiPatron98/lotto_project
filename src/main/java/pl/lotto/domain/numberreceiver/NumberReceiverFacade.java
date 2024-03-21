@@ -1,27 +1,44 @@
 package pl.lotto.domain.numberreceiver;
 
+import lombok.AllArgsConstructor;
+import pl.lotto.domain.numberreceiver.dto.InputNumbersResultDto;
+import pl.lotto.domain.numberreceiver.dto.TicketDto;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+@AllArgsConstructor
 public class NumberReceiverFacade {
 
-    public String inputNumbers(Set<Integer> numbersFromUser) {
+    private final NumberValidator validator;
+    private NumberReceiverRepository repository;
 
-        List<Integer> filteredNumbers = filterAllNumbersOutOfRange(numbersFromUser);
-        if (areAllNumbersInRange(filteredNumbers)) {
-            return "success";
+    public InputNumbersResultDto inputNumbers(Set<Integer> numbersFromUser) {
+
+        boolean areAllNumbersInRange = validator.filterAllNumbersOutOfRange(numbersFromUser);
+        if (areAllNumbersInRange) {
+            String ticketId = UUID.randomUUID().toString();
+            LocalDateTime drawDate = LocalDateTime.now();
+            Ticket savedTicket = repository.save(new Ticket(ticketId, drawDate, numbersFromUser));
+            return InputNumbersResultDto.builder()
+                    .drawDate(savedTicket.drawDate())
+                    .ticketId(savedTicket.ticketId())
+                    .message("success")
+                    .numbersFromUser(numbersFromUser)
+                    .build();
         }
-        return "failed";
+        return InputNumbersResultDto.builder()
+                .message("failed")
+                .build();
     }
 
-    private List<Integer> filterAllNumbersOutOfRange(Set<Integer> numbersFromUser) {
-        return numbersFromUser.stream()
-                .filter(number -> number >= 1)
-                .filter(number -> number <= 99)
+    public List<TicketDto> userNumbers(LocalDateTime date) {
+        List<Ticket> allTicketsByDrawDate = repository.findAllTicketsByDrawDate(date);
+        return allTicketsByDrawDate.stream()
+                .map(TicketMapper::mapFromTicket)
                 .toList();
     }
 
-    private boolean areAllNumbersInRange(List<Integer> filteredNumbers) {
-        return filteredNumbers.size() == 6;
-    }
 }
