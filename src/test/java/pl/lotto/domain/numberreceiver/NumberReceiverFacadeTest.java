@@ -209,4 +209,19 @@ public class NumberReceiverFacadeTest {
         assertThat(allTicketsByDate).containsOnly(ticketDto, ticketDto1);
     }
 
+    @Test
+    public void shouldReturnNextDrawDate() {
+        // given
+        Clock clock = Clock.fixed(LocalDateTime.of(2024, 3, 23, 10, 0, 0).toInstant(ZoneOffset.UTC), ZoneId.of("Europe/London"));
+        HashGenerable hashGenerator = new HashGenerator();
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(hashGenerator, clock, ticketRepository);
+
+        // when
+        LocalDateTime testedDrawDate = numberReceiverFacade.retrieveNextDrawDate();
+
+        // then
+        LocalDateTime expectedDrawDate = LocalDateTime.of(2024, 3, 23, 12, 0, 0);
+        assertThat(testedDrawDate).isEqualTo(expectedDrawDate);
+    }
+
 }
