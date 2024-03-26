@@ -23,14 +23,15 @@
         <assertj-core.version>3.23.1</assertj-core.version>
         <lombok.version>1.18.30</lombok.version>
         <mockito-core.version>4.9.0</mockito-core.version>
+        <testcontainers.version>1.17.4</testcontainers.version>
     </properties>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter-engine.version}</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
