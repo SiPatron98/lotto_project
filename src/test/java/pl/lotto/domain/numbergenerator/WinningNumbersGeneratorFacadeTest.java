@@ -18,14 +18,14 @@ import static org.mockito.Mockito.when;
 public class WinningNumbersGeneratorFacadeTest {
 
     private final WinningNumbersRepository winningNumbersRepository = new WinningNumbersRepositoryTestImpl();
-    private final OneRandomNumberFetcher fetcher = new SecureRandomOneNumberFetcher();
+
 
     NumberReceiverFacade numberReceiverFacade = mock(NumberReceiverFacade.class);
 
     @Test
     public void shouldReturnSetOfRequiredSize() {
         //given
-        RandomNumberGenerable generator = new RandomNumberGenerator(fetcher);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
         when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
         WinningNumbersGeneratorFacade numbersGenerator = new NumberGeneratorConfiguration().createForTest(
                 generator,
@@ -43,7 +43,7 @@ public class WinningNumbersGeneratorFacadeTest {
     @Test
     public void shouldReturnSetOfRequiredSizeWithinRequiredRange() {
         //given
-        RandomNumberGenerable generator = new RandomNumberGenerator(fetcher);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
         when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
         WinningNumbersGeneratorFacade numbersGenerator = new NumberGeneratorConfiguration().createForTest(
                 generator,
@@ -64,7 +64,7 @@ public class WinningNumbersGeneratorFacadeTest {
     @Test
     public void shouldReturnCollectionOfUniqueValues() {
         //given
-        RandomNumberGenerable generator = new RandomNumberGenerator(fetcher);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
         when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
         WinningNumbersGeneratorFacade numbersGenerator = new NumberGeneratorConfiguration().createForTest(
                 generator,
